@@ -14,7 +14,7 @@ siglas <- siglas[[1]] %>%
 for (i in siglas$Sigla) {
   url <- paste0("https://www.gov.br/depen/pt-br/servicos/sisdepen/mais-informacoes/relatorios-infopen/relatorios-analiticos/",i,"/",tolower(i),"-dez-2021.pdf")
   
-  httr::GET(url, httr::write_disk(path = paste0("relatorios/",i,"_dez_2021.pdf"), overwrite = TRUE))
+  httr::GET(url, httr::write_disk(path = paste0("data/relatorios/",i,"_dez_2021.pdf"), overwrite = TRUE))
 }
 
 
@@ -26,7 +26,7 @@ vars <- c("População carcerária",
           "Quantidade de Presos (Polícia e Segurança Pública)",
           "Quantidade de Presos custodiados no Sistema Penitenciário")
 
-excel <- list.files(path = "relatorios", 
+excel <- list.files(path = "data/relatorios", 
                  full.names = TRUE,
                  recursive = TRUE,
                  pattern = "(0|1|9|8|7)\\.xls") %>% 
@@ -53,7 +53,7 @@ excel <- list.files(path = "relatorios",
 library(pdftools)
 library(stringr)
 
-pdfs <- list.files(path = "relatorios", 
+pdfs <- list.files(path = "data/relatorios", 
                     full.names = TRUE,
                     recursive = TRUE,
                     pattern = "\\.pdf") %>% 

@@ -5,7 +5,7 @@ library(purrr)
 
 # ler os arquivos de microdados -------------------------------------------
 
-df <- list.files(path = "microdados", 
+df <- list.files(path = "data/microdados", 
                  full.names = TRUE,
                  recursive = TRUE,
                  pattern = "dados.+(0|1|9|8|7)\\.xlsx") %>% 
@@ -21,7 +21,7 @@ df <- list.files(path = "microdados",
   mutate(ano = stringr::str_extract(ciclo, "\\d{4}"))
 
 # renomear variaveis
-dicionario <- readxl::read_xlsx("dicionario_infopen.xlsx")
+dicionario <- readxl::read_xlsx("data/dicionario_infopen.xlsx")
 
 old <- as_vector(dicionario$var_texto)
 new <- as_vector(dicionario$id)

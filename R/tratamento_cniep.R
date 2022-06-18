@@ -5,7 +5,7 @@ library(purrr)
 
 # ler os arquivos de microdados -------------------------------------------
 
-df <- list.files(path = "cniep", 
+df <- list.files(path = "data/cniep", 
                  full.names = TRUE,
                  recursive = TRUE, 
                  pattern = ".xlsx") %>% 
