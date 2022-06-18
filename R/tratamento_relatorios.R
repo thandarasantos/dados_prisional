@@ -14,7 +14,7 @@ siglas <- siglas[[1]] %>%
 for (i in siglas$Sigla) {
   url <- paste0("https://www.gov.br/depen/pt-br/servicos/sisdepen/mais-informacoes/relatorios-infopen/relatorios-analiticos/",i,"/",tolower(i),"-dez-2021.pdf")
   
-  httr::GET(url, httr::write_disk(path = paste0("data/relatorios/",i,"_dez_2021.pdf"), overwrite = TRUE))
+  httr::GET(url, httr::write_disk(path = paste0("data-raw/relatorios/",i,"_dez_2021.pdf"), overwrite = TRUE))
 }
 
 
@@ -26,7 +26,7 @@ vars <- c("População carcerária",
           "Quantidade de Presos (Polícia e Segurança Pública)",
           "Quantidade de Presos custodiados no Sistema Penitenciário")
 
-excel <- list.files(path = "data/relatorios", 
+excel <- list.files(path = "data-raw/relatorios", 
                  full.names = TRUE,
                  recursive = TRUE,
                  pattern = "(0|1|9|8|7)\\.xls") %>% 
@@ -53,7 +53,7 @@ excel <- list.files(path = "data/relatorios",
 library(pdftools)
 library(stringr)
 
-pdfs <- list.files(path = "data/relatorios", 
+pdfs <- list.files(path = "data-raw/relatorios", 
                     full.names = TRUE,
                     recursive = TRUE,
                     pattern = "\\.pdf") %>% 
@@ -115,11 +115,15 @@ pdfs <- pdfs %>% filter(!str_detect(var, "Homens|Mulheres")) %>% left_join(.,hom
 
 # gerar o arquivo final para analise
 
-tabela <- rbind(excel,pdfs)
+tabela_relatorios <- rbind(excel,pdfs)
+
+# salvar o arquivo em .rda para o projeto
+
+save(tabela_relatorios,file = "data/tabela_relatorios.rda")
 
 # tabela de populacao total
 
-pop_total <- tabela %>% 
+pop_total <- tabela_relatorios %>% 
   filter(stringr::str_detect(ciclo, "dez")) %>% 
   mutate(ano = stringr::str_extract(ciclo, "\\d{4}")) %>% 
   filter(var == "População carcerária") %>% 
@@ -128,7 +132,7 @@ pop_total <- tabela %>%
 
 # tabela de populacao senasp
 
-pop_senasp <- tabela %>% 
+pop_senasp <- tabela_relatorios %>% 
   filter(stringr::str_detect(ciclo, "dez")) %>% 
   mutate(ano = stringr::str_extract(ciclo, "\\d{4}")) %>% 
   filter(var == "Quantidade de Presos (Polícia e Segurança Pública)") %>% 
@@ -137,7 +141,7 @@ pop_senasp <- tabela %>%
 
 # tabela de populacao infopen
 
-pop_infopen <- tabela %>% 
+pop_infopen <- tabela_relatorios %>% 
   filter(stringr::str_detect(ciclo, "dez")) %>% 
   mutate(ano = stringr::str_extract(ciclo, "\\d{4}")) %>% 
   filter(var == "Quantidade de Presos custodiados no Sistema Penitenciário") %>% 
@@ -146,7 +150,7 @@ pop_infopen <- tabela %>%
 
 # tabela de taxa de encarceramento
 
-taxa_encar <- tabela %>% 
+taxa_encar <- tabela_relatorios %>% 
   filter(stringr::str_detect(ciclo, "dez")) %>% 
   mutate(ano = stringr::str_extract(ciclo, "\\d{4}")) %>% 
   filter(var == "População carcerária por 100.000 habitantes") %>% 

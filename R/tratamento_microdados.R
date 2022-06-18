@@ -5,7 +5,7 @@ library(purrr)
 
 # ler os arquivos de microdados -------------------------------------------
 
-df <- list.files(path = "data/microdados", 
+microdados <- list.files(path = "data-raw/microdados", 
                  full.names = TRUE,
                  recursive = TRUE,
                  pattern = "dados.+(0|1|9|8|7)\\.xlsx") %>% 
@@ -21,17 +21,21 @@ df <- list.files(path = "data/microdados",
   mutate(ano = stringr::str_extract(ciclo, "\\d{4}"))
 
 # renomear variaveis
-dicionario <- readxl::read_xlsx("data/dicionario_infopen.xlsx")
+dicionario <- readxl::read_xlsx("data-raw/dicionario_infopen.xlsx")
 
 old <- as_vector(dicionario$var_texto)
 new <- as_vector(dicionario$id)
 
-df <- data.table::setnames(df,old = old, new = new)
+microdados <- data.table::setnames(microdados,old = old, new = new)
+
+# salvar o arquivo em .rda para o projeto
+
+save(microdados,file = "data/microdados.rda")
 
 # tabelas finais ----------------------------------------------------------
 
 # tabela de obitos
-obitos <- df %>% 
+obitos <- microdados %>% 
   group_by(v0010,ano) %>% 
   summarise(obitos_naturais = sum(v1306, na.rm = TRUE), 
             obitos_criminais = sum(v1309, na.rm = TRUE),

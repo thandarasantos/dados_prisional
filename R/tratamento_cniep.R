@@ -5,7 +5,7 @@ library(purrr)
 
 # ler os arquivos de microdados -------------------------------------------
 
-df <- list.files(path = "data/cniep", 
+cniep <- list.files(path = "data-raw/cniep", 
                  full.names = TRUE,
                  recursive = TRUE, 
                  pattern = ".xlsx") %>% 
@@ -21,6 +21,10 @@ df <- list.files(path = "data/cniep",
 
 
 # tabelas finais ----------------------------------------------------------
+
+# salvar o arquivo em .rda para o projeto
+
+save(cniep,file = "data/cniep.rda")
 
 # tabela de obitos
 obitos <- df %>% 
