@@ -29,6 +29,6 @@ obitos <- df %>%
             obitos_criminais = sum(v1309, na.rm = TRUE),
             suicidios = sum(v1312, na.rm = TRUE),
             obitos_acidentais = sum(v1315, na.rm = TRUE),
-            obitos_desconhec = sum(v1318, na.rm = TRUE))
+            obitos_desconhec = sum(v1318, na.rm = TRUE))  
 
 
